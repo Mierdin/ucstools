@@ -27,8 +27,9 @@ def getUcsWWPNs(ucs_ipaddr, ucs_username, ucs_passwd):
 	#TODO: Statically defining sub-organization for now, will make more dynamic later
 
 	#Need to make a generic function (probably place in central "general functions" file that finds an org at any nest level, and retrieves ful DN for things like what you're doing below. Allows for org filtering at any level
-	ucsOrg = "org-ORG_TEST"
+	ucsOrg = "org-ORG_ROOT"
 
+	#TODO: For some reason, if the specified org does not exist, this still returns all orgs, rather than erroring out or providing a null value. Need to handle this better
 	obj = handle.GetManagedObject(None, None, {"Dn":"org-root/" + ucsOrg + "/"})
 	moArr = handle.GetManagedObject(obj, "vnicFc")
 	for mo in moArr:
@@ -39,7 +40,7 @@ def getUcsWWPNs(ucs_ipaddr, ucs_username, ucs_passwd):
 			origDn = str(mo.Dn)
 			
 			#Need to do a little string surgery to transform the Dn of the vHBA into a proper zone name.
-			origDn = origDn.replace('org-root/org-ORG_TEST/','')
+			origDn = origDn.replace('org-root/org-TPAC_1/','')
 			origDn = origDn.replace('/','_')
 			origDn = origDn.replace('ls-','')
 			origDn = origDn.replace('fc-','')
